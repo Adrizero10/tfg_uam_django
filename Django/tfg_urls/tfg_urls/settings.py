@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'home.apps.HomeConfig',
+    'authentication.apps.AuthenticationConfig',
 ]
 
 MIDDLEWARE = [
@@ -49,12 +49,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
 ROOT_URLCONF = 'tfg_urls.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [str(BASE_DIR.joinpath('home/templates')),
+        'DIRS': [str(BASE_DIR.joinpath('authentication/templates')),
+                 str(BASE_DIR.joinpath('home/templates')),
                  str(BASE_DIR.joinpath('templates')),],
         'APP_DIRS': True,
         'OPTIONS': {

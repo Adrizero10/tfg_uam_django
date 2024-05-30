@@ -19,10 +19,11 @@ def homeView(request):
                 df = pd.read_csv(thefile)
     
     # Obtener las primeras 10 filas y los nombres de las columnas
-    first_10_rows = df.head(300).to_html(index=False, classes='table table-bordered table-striped')
-    
+    df = df.head(20)
+    df.columns = [col.replace('_', ' ').title() for col in df.columns]
+
     context = {
-        'df_html': first_10_rows,
+        'df_html': df.to_html(index=False, classes='table table-bordered table-striped', escape=False),
     }
 
     return render(request, template_name, context)
@@ -59,14 +60,14 @@ def homeSearchView(request):
     df['Risk'] = df['jaro_winkler_score'].apply(set_color)
 
     # Convertir el DataFrame a HTML, incluyendo los estilos CSS
-    top_10_html = df.nlargest(10, 'jaro_winkler_score').to_html(index=False, classes='table table-bordered table-striped', escape=False)
+    df = df.nlargest(10, 'jaro_winkler_score')
     df.drop(columns=['jaro_winkler_score'], inplace=True)
-    context = {
-        'df_html': top_10_html,
-    }
+    df.columns = [col.replace('_', ' ').title() for col in df.columns]
     
+
     context = {
-        'df_html': top_10_html,
+        'df_html': df.to_html(index=False, classes='table table-bordered table-striped', escape=False),
+        'url_legit' : "Searching posible urls phishing for " + url_legit,
     }
 
     return render(request, template_name, context)

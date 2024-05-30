@@ -13,14 +13,10 @@
 {% load static %}
 
 <section class="container">
-    <div class="row">
-        <div class="col">
-            <h1 class="text-primary border-bottom border-dark mb-5">Book Detail</h1>
-        </div>
-    </div>
+
     <div class="row">
         <div class="col-md-6">
-            <h2>First 10 Rows of the CSV File</h2>
+            <h2>Url Phishing Scanner</h2>
             <form method="get" action="{% url 'search' %}" class="mt-4">
                 {% csrf_token %}
                 <div class="form-group">
@@ -37,6 +33,7 @@
     <div class="row">
         <div class="col">
             <div class="table-container" style="height: 300px; overflow-y: auto;">
+                <h4>{{ url_legit }}</h4>
                 <!-- Tabla generada a partir del DataFrame -->
                 {{ df_html | safe }}
             </div>
