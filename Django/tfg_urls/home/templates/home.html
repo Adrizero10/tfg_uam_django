@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}
+{{ book.title }}
+{% endblock %}
+
+{% block ico %}
+{% load static %}
+<link rel="shortcut icon" href="{% static 'img/ico/detail.ico' %}" type="image/x-icon">
+{% endblock %}
+
+
+{% block content %}
+{% load static %}
+
+<section class="container">
+    <div class="row">
+        <div class="col">
+            <h1 class="text-primary border-bottom border-dark mb-5">Book Detail</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <h2>First 10 Rows of the CSV File</h2>
+            <form method="get" action="{% url 'search' %}" class="mt-4">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="urlInput">URL de Phishing:</label>
+                    <input type="text" class="form-control" id="urlInput" name="url_legit" placeholder="Ingrese la URL...">
+                </div>
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col">
+            <div class="table-container" style="height: 300px; overflow-y: auto;">
+                <!-- Tabla generada a partir del DataFrame -->
+                {{ df_html | safe }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function submitForm() {
+        document.forms[0].submit();
+    }
+</script>
+
+{% endblock content %}
