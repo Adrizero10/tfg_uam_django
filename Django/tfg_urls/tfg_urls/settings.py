@@ -125,3 +125,17 @@ STATIC_ROOT = BASE_DIR / 'static'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+# myproject/settings.py
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Cambia esto por el servidor SMTP que estés utilizando
+EMAIL_PORT = 587  # Cambia el puerto si es necesario (587 para TLS, 465 para SSL)
+EMAIL_USE_TLS = True  # O EMAIL_USE_SSL si usas SSL en lugar de TLS
+EMAIL_HOST_USER = 'testadrizero@gmail.com'  # Tu dirección de correo electrónico
+EMAIL_HOST_PASSWORD = 'aiyi ksgy qhgt utag'  # La contraseña de tu cuenta de correo electrónico
+DEFAULT_FROM_EMAIL = 'adrizero2001@gmail.com'  # Correo desde el cual se enviarán los correos
+
+

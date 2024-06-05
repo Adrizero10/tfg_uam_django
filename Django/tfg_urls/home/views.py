@@ -1,12 +1,17 @@
+import datetime
+from django.conf import settings
 from django.shortcuts import render
 import requests
 import pandas as pd
 from io import BytesIO
 from zipfile import ZipFile
+from django.core.mail import EmailMessage
+from django.http import HttpResponse
+
+url = 'https://www.whoisds.com/sample/other-db/nrd-crd-exd.zip'
 
 def homeView(request):
     template_name = 'home.html'
-    url = "https://www.whoisds.com/sample/other-db/nrd-crd-exd.zip"
     
     response = requests.get(url)
     response.raise_for_status()
@@ -28,13 +33,13 @@ def homeView(request):
 
     return render(request, template_name, context)
 
-def homeSearchView(request):
+def homeSearchView(request,sendmailok = False,url_legit = None):
     template_name = 'home.html'
-    url = "https://www.whoisds.com/sample/other-db/nrd-crd-exd.zip"
     
     response = requests.get(url)
     response.raise_for_status()
-    url_legit = request.GET.get('url_legit', '')
+    if url_legit is None:
+        url_legit = request.GET.get('url_legit', '')
     zipfile_content = BytesIO(response.content)
     
     with ZipFile(zipfile_content) as thezip:
@@ -49,9 +54,9 @@ def homeSearchView(request):
     # Establecer estilos CSS basados en los valores de jaro_winkler_score
     def set_color(value):
         if value > 1:
-            return 'Very Hight'
+            return 'Very High'
         elif value >= 0.9 and value <= 1:
-            return 'Hight'
+            return 'High'
         elif value >= 0.8 and value < 0.9:
             return 'Medium'
         else:
@@ -67,7 +72,9 @@ def homeSearchView(request):
 
     context = {
         'df_html': df.to_html(index=False, classes='table table-bordered table-striped', escape=False),
-        'url_legit' : "Searching posible urls phishing for " + url_legit,
+        'url_legit' : url_legit,
+        'send_mail_ok' : sendmailok,
+        'send_mail_option' : True
     }
 
     return render(request, template_name, context)
@@ -124,3 +131,57 @@ def jaro_similarity(s1, s2):
     jaro_winkler_similarity = jaro_similarity + (prefix * 0.1 * (1 - jaro_similarity))
 
     return jaro_winkler_similarity
+
+def send_mail_phising_warnings(request):
+
+    url_legit = request.GET.get('url_legit_mail', '')
+    
+    response = requests.get(url)
+    response.raise_for_status()
+    url_legit = request.GET.get('url_legit_mail', '')
+    zipfile_content = BytesIO(response.content)
+    
+    with ZipFile(zipfile_content) as thezip:
+        # Asumiendo que hay un solo archivo en el zip
+        for filename in thezip.namelist():
+            with thezip.open(filename) as thefile:
+                df = pd.read_csv(thefile)
+    
+
+    df['jaro_winkler_score'] = df['domain_name'].apply(lambda x: jaro_similarity(url_legit, x))
+
+    # Establecer estilos CSS basados en los valores de jaro_winkler_score
+    def set_color(value):
+        if value > 1:
+            return 'Very High'
+        elif value >= 0.9 and value <= 1:
+            return 'High'
+        elif value >= 0.8 and value < 0.9:
+            return 'Medium'
+        else:
+            return 'Low'
+
+    df['Risk'] = df['jaro_winkler_score'].apply(set_color)
+
+    # Convertir el DataFrame a HTML, incluyendo los estilos CSS
+    df = df.nlargest(10000, 'jaro_winkler_score')
+    df.drop(columns=['jaro_winkler_score'], inplace=True)
+    df.columns = [col.replace('_', ' ').title() for col in df.columns]
+    file_path = 'informe_phishing.xlsx'
+    df.to_excel(file_path, index=False)
+
+
+
+    #dia de hoy en strign
+    fecha = datetime.datetime.now().strftime("%Y-%m-%d") 
+
+    subject = 'Informe dia ' + fecha
+    message = 'Adjunto se encuentra el informe de phishing del dia ' + fecha + ', con las 10.000 direcciones mas parecidas a la url ' + str(url_legit) + '\n\n' + 'Saludos, \n\n' + 'Equipo de seguridad phishing'
+    recipient_list = ['adrizero2001@gmail.com', 'lucipeich7@gmail.com']
+    
+    email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, recipient_list)
+    email.attach('informe_phishing.xlsx', open('informe_phishing.xlsx', 'rb').read(), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    
+    email.send()
+    
+    return homeSearchView(request,sendmailok = True,url_legit = url_legit)
