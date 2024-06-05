@@ -177,7 +177,7 @@ def send_mail_phising_warnings(request):
 
     subject = 'Informe dia ' + fecha
     message = 'Adjunto se encuentra el informe de phishing del dia ' + fecha + ', con las 10.000 direcciones mas parecidas a la url ' + str(url_legit) + '\n\n' + 'Saludos, \n\n' + 'Equipo de seguridad phishing'
-    recipient_list = ['adrizero2001@gmail.com', 'lucipeich7@gmail.com']
+    recipient_list = ['adrizero2001@gmail.com', 'lucipeich7@gmail.com', request.user.email]
     
     email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, recipient_list)
     email.attach('informe_phishing.xlsx', open('informe_phishing.xlsx', 'rb').read(), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
