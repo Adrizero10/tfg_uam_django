@@ -40,22 +40,66 @@
             {% endif %}
         </div>
     </div>
-    
-    
-</section>
 
-<div class="container mt-5">
-    <div class="row">
-        <div class="col">
-            <div class="container">
-                <h2>Datos de la Tabla</h2>
-                <div class="table-responsive">
-                    {{ df_html|safe }}
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col">
+                <div class="container">
+                    {% if user.is_authenticated and df_html and send_mail_option %}
+                    <h2>Informe de Análisis de {{url_legit}}</h2>
+                    {% else %}
+                    <h2>Informe de Análisis</h2>
+                    {% endif %}
+
+                    <div class="table-responsive">
+                        {{ df_html|safe }}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+    
+    
+    {% if user.is_authenticated and df_html and send_mail_option %}
+    <div class="container text-center my-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Número de URLs por Tipo de Riesgo</h5>
+                    </div>
+                    <div class="card-body">
+                        <img src="data:image/png;base64,{{ image_base64 }}" class="img-fluid" alt="Risk Bar Chart">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="card-title">Estadísticas</h5>
+        </div>
+        <div class="card-body">
+            <ul>
+                <li>Total de URLs analizadas: {{ total_urls }}</li>
+                <li>Total de URLs sospechosas: {{ suspicious_urls }}</li>
+                <li>Porcentaje de URLs en cada categoría de riesgo:
+                    <ul>
+                        {% for risk, percentage in risk_percentages.items %}
+                        <li>{{ risk }}: {{ percentage }}%</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    {% endif %}
+
+</section>
+
+
 
 <script>
     function submitForm() {

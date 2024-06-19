@@ -41,35 +41,45 @@
    {% load static %}
    <header class="p-3 mb-3 text-dark border-bottom bg-light bg-gradient fixed-top">
       <div class="container">
-   <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start navItem">
-      <a href="{% url 'home' %}"
-         class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none font-xxl mr-1"><i
-            class="fas fa-home fa-lg fa-fw pr-4"></i> Url Phishing Scanner
-      </a>
-   </div>
-   {% if user.is_authenticated %}
-   <div class="text-end">
-      <div class="d-inline-flex align-items-center">
-          <form method="post" action="{% url 'logout' %}">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-outline-dark me-2 userLogIn-Out">
-                  <i class="fas fa-sign-out-alt"></i> Log Out
-              </button>
-          </form>
-          <a class="btn btn-outline-info me-2 userLogIn-Out">
-              <i class="fas fa-user-cog"></i> Welcome {{ user.username }}
-          </a>
+          <div class="d-flex flex-wrap align-items-center justify-content-between navItem">
+              <!-- Home Link -->
+              <a href="{% url 'home' %}" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none font-xxl">
+                  <i class="fas fa-home fa-lg fa-fw pr-2"></i> Url Phishing Scanner
+              </a>
+              
+              <!-- User Authentication Links -->
+              <div class="text-end">
+                  {% if user.is_authenticated %}
+                  <div class="d-inline-flex align-items-center">
+                      <!-- Log Out Form -->
+                      <form method="post" action="{% url 'logout' %}" class="me-2 mb-2 mb-lg-0">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-outline-dark userLogIn-Out">
+                              <i class="fas fa-sign-out-alt"></i> Log Out
+                          </button>
+                      </form>
+                      <!-- Welcome User -->
+                      <a class="btn btn-outline-info userLogIn-Out mb-2 mb-lg-0">
+                          <i class="fas fa-user-cog"></i> Welcome, {{ user.username }}
+                      </a>
+                  </div>
+                  {% else %}
+                  <div class="text-end">
+                      <!-- Log In Button -->
+                      <a href="{% url 'login' %}" class="btn btn-success me-2 userLogIn-Out">
+                          <i class="fas fa-user"></i> Log In
+                      </a>
+                      <!-- Sign Up Button -->
+                      <a href="{% url 'signup' %}" class="btn btn-warning userLogIn-Out">
+                          <i class="fas fa-user-plus"></i> Sign Up
+                      </a>
+                  </div>
+                  {% endif %}
+              </div>
+          </div>
       </div>
-  </div>
-   {% else %}
-   <div class="text-end justify-content-end">
-      <a href="{% url 'login' %}" class="btn btn-success me-2 userLogIn-Out"><i class="fas fa-user"></i> Log
-         In</a>
-      <a href="{% url 'signup' %}" class="btn btn-warning userLogIn-Out"><i class="fas fa-user-plus"></i> Sign
-         Up</a>
-   </div>
-   {% endif %}
-   </header>
+  </header>
+  
 
    <div class="container mt-5">
       {% block content %}
@@ -79,10 +89,11 @@
    {% block footer %}
    <footer class="py-5 my-4">
       <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-         <li class="nav-item"><a class="nav-link px-2 text-muted">About</a></li>
+          <li class="nav-item"><a class="nav-link px-2 text-muted" href="{% url 'phishing' %}">Información sobre Phishing</a></li>
       </ul>
       <p class="text-center text-muted">&copy; 2024 CiberPhishing, Inc</p>
-   </footer>
+  </footer>
+  
 
    {% endblock %}
    <!-- jQuery first, then Popper.js, then Bootstrap JS -->

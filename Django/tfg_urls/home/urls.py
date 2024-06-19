@@ -12,5 +12,6 @@ urlpatterns = [
     path('home/', views.homeView, name='home'),
     path('home/search/', views.homeSearchView, name='search'),
     path('send_informe_phishing/', views.send_mail_phising_warnings, name='send_informe_phishing'),
+    path('phishing/', views.phishing, name='phishing'),
 
 ]
