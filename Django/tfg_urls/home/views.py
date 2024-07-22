@@ -63,7 +63,7 @@ def homeSearchView(request,sendmailok = False,url_legit = None):
     
 
     df['jaro_winkler_score'] = df['domain_name'].apply(lambda x: jaro_similarity(url_legit, x))
-
+    total_urls = len(df)
     # Establecer estilos CSS basados en los valores de jaro_winkler_score
     def set_color(value):
         if value > 1:
@@ -82,6 +82,7 @@ def homeSearchView(request,sendmailok = False,url_legit = None):
 
     # Contar el número de URLs por tipo de riesgo
     risk_counts = df_filtered['Risk'].value_counts()
+    
     # Convertir el DataFrame a HTML, incluyendo los estilos CSS
     df = df.nlargest(10, 'jaro_winkler_score')
     df.drop(columns=['jaro_winkler_score'], inplace=True)
@@ -100,7 +101,6 @@ def homeSearchView(request,sendmailok = False,url_legit = None):
     graphic_plot_chart = base64.b64encode(buf.read()).decode('utf-8')
     buf.close()
 
-    total_urls = len(df)
     suspicious_urls = len(df_filtered)
     risk_percentages = df_filtered['Risk'].value_counts(normalize=True) * 100
     risk_percentages = risk_percentages.round(1) 
