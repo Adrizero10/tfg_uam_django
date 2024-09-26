@@ -41,6 +41,57 @@
     }, 1000);
 </script>
 
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        text-align: center;
+        margin: 0;
+        padding: 20px;
+    }
+    h1 {
+        color: #333;
+    }
+    #acertijo-container {
+        margin-top: 30px;
+    }
+    .acertijo {
+        display: none;
+    }
+    #acertijo-0 {
+        display: block;
+    }
+    input[type="text"] {
+        padding: 10px;
+        width: 50%;
+        margin-top: 20px;
+        font-size: 16px;
+    }
+    button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+        margin-top: 10px;
+        font-size: 16px;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+    .correcto {
+        color: green;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+    .incorrecto {
+        color: red;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+</style>
+
 <section class="py-5">
     <div class="container px-4 px-lg-5 mt-5">
 
@@ -87,14 +138,91 @@
             <div id="timer" class="display-2 font-weight-bold" style="color: #ff5733;"></div>
         </div>
 
+
+        <div id="acertijo-container">
+            <div id="acertijo-0" class="acertijo">
+                <h3>Acertijo 1: 🧠</h3>
+                <p>X_X aun no disponible</p>
+                <input type="text" id="respuesta-0" placeholder="Introduce la respuesta...">
+                <button onclick="verificarRespuesta(0, 'nube')">Enviar</button>
+                <p id="resultado-0"></p>
+            </div>
+    
+            <div id="acertijo-1" class="acertijo">
+                <h3>Acertijo 2: 🌟</h3>
+                <p>Cuanto más grande, menos se ve. ¿Qué es?</p>
+                <input type="text" id="respuesta-1" placeholder="Introduce la respuesta...">
+                <button onclick="verificarRespuesta(1, 'oscuridad')">Enviar</button>
+                <p id="resultado-1"></p>
+            </div>
+    
+            <div id="acertijo-2" class="acertijo">
+                <h3>Acertijo 3: 🔑</h3>
+                <p>Tiene dientes pero no puede morder. ¿Qué es?</p>
+                <input type="text" id="respuesta-2" placeholder="Introduce la respuesta...">
+                <button onclick="verificarRespuesta(2, 'llave')">Enviar</button>
+                <p id="resultado-2"></p>
+            </div>
+    
+            <div id="acertijo-3" class="acertijo">
+                <h3>Acertijo 4: 🚪</h3>
+                <p>Entra y sale, pero no se mueve. ¿Qué es?</p>
+                <input type="text" id="respuesta-3" placeholder="Introduce la respuesta...">
+                <button onclick="verificarRespuesta(3, 'puerta')">Enviar</button>
+                <p id="resultado-3"></p>
+            </div>
+    
+            <div id="acertijo-4" class="acertijo">
+                <h3>Acertijo 5: 🔄</h3>
+                <p>Si me nombras, desaparezco. ¿Qué soy?</p>
+                <input type="text" id="respuesta-4" placeholder="Introduce la respuesta...">
+                <button onclick="verificarRespuesta(4, 'silencio')">Enviar</button>
+                <p id="resultado-4"></p>
+            </div>
+    
+            <div id="felicitaciones" style="display:none;">
+                <h2>¡Felicidades! 🏆</h2>
+                <p>Muuuy bien bichi bichiii, has llegado al final jeje. Has conseguido el tesoro 🎉 Se encuentra en el coche de adri en el maletero, abriendo la tapa tapa secreta 🔑</p>
+            </div>
+        </div>
+
+
+
         <div class="text-center mt-4">
             <img src="{% static 'img/lupiScout.jpeg' %}" alt="Descripción de la imagen" class="img-fluid rounded shadow" style="max-width: 100%; height: auto;">
         </div>
 
     </div>
+
+
+
+
     
     
 </section>
+<script>
+    // Función para verificar la respuesta del usuario
+    function verificarRespuesta(acertijoIndex, respuestaCorrecta) {
+        const respuestaUsuario = document.getElementById(`respuesta-${acertijoIndex}`).value.toLowerCase();
+        const resultado = document.getElementById(`resultado-${acertijoIndex}`);
 
+        if (respuestaUsuario === respuestaCorrecta.toLowerCase()) {
+            resultado.textContent = "¡Correcto! 🎉";
+            resultado.className = "correcto";
+            setTimeout(() => {
+                document.getElementById(`acertijo-${acertijoIndex}`).style.display = 'none';
+                const nextAcertijo = acertijoIndex + 1;
+                if (document.getElementById(`acertijo-${nextAcertijo}`)) {
+                    document.getElementById(`acertijo-${nextAcertijo}`).style.display = 'block';
+                } else {
+                    document.getElementById('felicitaciones').style.display = 'block';
+                }
+            }, 1000);
+        } else {
+            resultado.textContent = "Respuesta incorrecta. ❌";
+            resultado.className = "incorrecto";
+        }
+    }
+</script>
 
 {% endblock content %}
