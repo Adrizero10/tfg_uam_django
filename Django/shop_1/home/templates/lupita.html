@@ -6,6 +6,7 @@
 {% block ico %}
 {% load static %}
 <link rel="shortcut icon" href="{% static 'img/ico/detail.ico' %}" type="image/x-icon">
+
 {% endblock %}
 
 
@@ -14,7 +15,7 @@
 <!-- Header-->
 <script>
     // Establece la fecha y hora objetivo
-    const targetDate = new Date("2024-09-30T18:00:00").getTime(); // Cambia la fecha y hora según tus necesidades
+    const targetDate = new Date("2024-10-06T10:00:00").getTime(); // Cambia la fecha y hora según tus necesidades
 
     // Actualiza el contador cada segundo
     const countdownInterval = setInterval(function() {
@@ -39,6 +40,10 @@
             document.getElementById("timer").innerHTML = "¡El evento ha comenzado!";
         }
     }, 1000);
+
+
+
+
 </script>
 
 <style>
@@ -104,12 +109,13 @@
     }
 
 </style>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
 
 <section class="py-5">
 
     <div style="background-color: #C1EFFF; padding: 20px; border-radius: 10px; text-align: center; font-family: Arial, sans-serif; color: #333;">
         <h2 style="font-size: 24px;">🎉 Nuevas fechas del evento</h2>
-        <p style="font-size: 18px;">Me complace anunciar que el gran evento se celebrará el día <strong>30 de septiembre</strong>! 🎊</p>
+        <p style="font-size: 18px;">Me complace anunciar que el gran evento se celebrará el día <strong>06 de octubre</strong>! 🎊</p>
         <p style="font-size: 18px;">Prepárate para una aventura llena de sorpresas en el Parque Polvoranca. 🌳🚴‍♀️</p>
         <p style="font-size: 18px;">Asegúrate de traer tu mejor outfit y mucha energía. Ponte guapa y preparada para descubrir todos los secetos que te esperan 🔑💎</p>
         <p style="font-size: 18px;"> Que misterios esconde esta web? Estos días dará pistas</p>
@@ -147,7 +153,7 @@
     
         <div class="text-center mt-5">
             <h4 class="font-weight-bold">¡Atención, aventurera! ⚠️</h4>
-            <p>Los acertijos se desbloquearán el 30 a las <strong>17:00</strong> ⏰. ¡Prepárate para comenzar la aventura! <span>&#128520;</span></p>
+            <p>Los acertijos se desbloquearán el 06 a las <strong>09:00</strong> ⏰. ¡Prepárate para comenzar la aventura! <span>&#128520;</span></p>
         </div>
     
         <div id="countdown" class="text-center mt-4">
@@ -253,16 +259,16 @@
             <div id="acertijo-5" class="acertijo">
                 <h3>Acertijo 6: 🔄</h3>
                 <p>No soy avión ni nave espacial, pero alzo vuelo desde un lugar especial. Si sigues el viento, me encontrarás, dónde te estoy esperando para despegar?</p>
-                <input type="text" id="respuesta-4" placeholder="Introduce la respuesta...">
-                <button onclick="verificarRespuesta(4, 'playa del ingles')">Enviar</button>
+                <input type="text" id="respuesta-5" placeholder="Introduce la respuesta...">
+                <button onclick="verificarRespuesta(5, 'playa del ingles')">Enviar</button>
                 <p id="resultado-5"></p>
             </div>
 
             <div id="acertijo-6" class="acertijo">
                 <h3>Acertijo 7: 🔄</h3>
                 <p>Soy el lugar donde al descanso llegas sobre ruedas, antes de caminar. Sin alas ni motor, aquí debes parar, dónde debo esperarte?</p>
-                <input type="text" id="respuesta-4" placeholder="Introduce la respuesta...">
-                <button onclick="verificarRespuesta(4, 'columbia')">Enviar</button>
+                <input type="text" id="respuesta-6" placeholder="Introduce la respuesta...">
+                <button onclick="verificarRespuesta(6, 'columbia')">Enviar</button>
                 <p id="resultado-6"></p>
             </div>
     
@@ -288,27 +294,35 @@
 </section>
 <script>
     // Función para verificar la respuesta del usuario
-    function verificarRespuesta(acertijoIndex, respuestaCorrecta) {
-        const respuestaUsuario = document.getElementById(`respuesta-${acertijoIndex}`).value.toLowerCase();
-        const resultado = document.getElementById(`resultado-${acertijoIndex}`);
+    // Función para verificar la respuesta del usuario
+function verificarRespuesta(acertijoIndex, respuestaCorrecta) {
+    const respuestaUsuario = document.getElementById(`respuesta-${acertijoIndex}`).value.toLowerCase();
+    const resultado = document.getElementById(`resultado-${acertijoIndex}`);
 
-        if (respuestaUsuario === respuestaCorrecta.toLowerCase()) {
-            resultado.textContent = "¡Correcto! 🎉";
-            resultado.className = "correcto";
-            setTimeout(() => {
-                document.getElementById(`acertijo-${acertijoIndex}`).style.display = 'none';
-                const nextAcertijo = acertijoIndex + 1;
-                if (document.getElementById(`acertijo-${nextAcertijo}`)) {
-                    document.getElementById(`acertijo-${nextAcertijo}`).style.display = 'block';
-                } else {
-                    document.getElementById('felicitaciones').style.display = 'block';
-                }
-            }, 1000);
-        } else {
-            resultado.textContent = "Respuesta incorrecta. ❌";
-            resultado.className = "incorrecto";
-        }
+    if (respuestaUsuario === respuestaCorrecta.toLowerCase()) {
+        resultado.textContent = "¡Correcto! 🎉";
+        resultado.className = "correcto";
+        setTimeout(() => {
+            document.getElementById(`acertijo-${acertijoIndex}`).style.display = 'none';
+            const nextAcertijo = acertijoIndex + 1;
+            if (document.getElementById(`acertijo-${nextAcertijo}`)) {
+                document.getElementById(`acertijo-${nextAcertijo}`).style.display = 'block';
+            } else {
+                document.getElementById('felicitaciones').style.display = 'block';
+                // Mostrar confeti al llegar al último acertijo
+                confetti({
+                    particleCount: 200,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+        }, 1000);
+    } else {
+        resultado.textContent = "Respuesta incorrecta. ❌";
+        resultado.className = "incorrecto";
     }
+}
+
 </script>
 
 {% endblock content %}
